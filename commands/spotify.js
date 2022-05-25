@@ -1,39 +1,48 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const UtilAudioPlayer = require('../utils/audio');
 const Discord = require('@discordjs/voice');
-
-// DEBUG: https://www.youtube.com/watch?v=F64yFFnZfkI&list=RDF64yFFnZfkI&start_radio=1
+const play = require('play-dl');
 
 let connection;
 let player;
 
+// DEBUG: https://open.spotify.com/track/6z1TvLTR0oOsWSJfDrERmj?si=149d8acc2bd14768
+
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('youtube')
-    .setDescription('Allows for youtube commands')
+    .setName('spotify')
+    .setDescription('allows for use of spotify sub commands.')
     .addSubcommand(subcommand =>
       subcommand
         .setName('play')
-        .setDescription('Plays audio from YouTube url')
+        .setDescription('Plays audio from spotify')
         .addStringOption(option =>
           option
-            .setName('url')
-            .setDescription('url for specified video audio')
+            .setName('song')
+            .setDescription('Name of the song from Spotify')
         )
     )
-    .addSubcommand(subcommand => 
+    .addSubcommand(subcommand =>
       subcommand
         .setName('stop')
-        .setDescription('Stops the YouTube audio from playing')
+        .setDescription('Stops the Spotify audio from playing')
     ),
   async execute(interaction) {
-    const { stream } = require('play-dl');
-     
     if (interaction.options.getSubcommand() === 'play') {
-      const url = interaction.options.getString('url');
-      if (url) {
+      const song = interaction.options.getString('song');
+
+      if (song) {
         const voiceChannel = interaction.member.voice.channel;
-        const playStream = await stream(url);
+
+        if (play.is_expired()) {
+          await play.refreshToken();
+        }
+
+        let sp_result = await play.search(song, {
+          limit: 1
+        });
+
+        let stream = await play.stream(sp_result[0].url);
 
         const permissions = voiceChannel.permissionsFor(interaction.client.user);
 
@@ -50,19 +59,17 @@ module.exports = {
 
         player = Discord.createAudioPlayer();
 
-        UtilAudioPlayer.play(player, connection, playStream);
+        UtilAudioPlayer.play(player, connection, stream); 
 
-        await interaction.reply('Started playing YouTube URL: ' + url);
+        await interaction.reply('Started playing ' + sp_result[0].title);
       }
-
       else {
-        await interaction.reply('Please pass a YouTube url to start playing audio from YouTube.');
+        await interaction.reply('Please pass a spotify url to start playing audio from Spotify.')
       }
     }
-    
     if (interaction.options.getSubcommand() === 'stop') {
       UtilAudioPlayer.stop(connection);
-      await interaction.reply('YouTube audio has been stopped.');
+      await interaction.reply('Spotify audio has been stopped.')
     }
   }
 }

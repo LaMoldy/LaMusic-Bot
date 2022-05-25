@@ -1,7 +1,7 @@
 Current:
 Youtube:
-  [ ] Playing
-  [ ] Killing 
+  [X] Playing
+  [X] Killing 
 
 Spotify:  
   [ ] Playing

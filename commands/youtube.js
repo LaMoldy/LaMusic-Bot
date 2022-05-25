@@ -1,8 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { channel } = require('diagnostics_channel');
-const { Client, Interaction } = require('discord.js');
+const UtilAudioPlayer = require('../utils/audio');
+const Discord = require('@discordjs/voice');
 
 // DEBUG: https://www.youtube.com/watch?v=F64yFFnZfkI&list=RDF64yFFnZfkI&start_radio=1
+
+let connection;
+let player;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -24,55 +27,30 @@ module.exports = {
         .setDescription('Stops the YouTube audio from playing')
     ),
   async execute(interaction) {
-    const ytdl = require('ytdl-core');
-    const Discord = require('@discordjs/voice');
-    const { joinVoiceChannel } = require('@discordjs/voice');
-
-    const voiceChannel = interaction.member.voice.channel;
-
-    let connection;
-
+    const { stream } = require('play-dl');
+     
     if (interaction.options.getSubcommand() === 'play') {
       const url = interaction.options.getString('url');
-
       if (url) {
-        const stream = ytdl(url, { filter: 'audioonly' });
+        const voiceChannel = interaction.member.voice.channel;
+        const playStream = await stream(url);
 
-        const player = Discord.createAudioPlayer(stream);
-        const resource = Discord.createAudioResource(stream);
+        const permissions = voiceChannel.permissionsFor(interaction.client.user);
 
-        if (voiceChannel == null) {
-          await interaction.reply('You need to be in a VC to use this command.');
+        if (!permissions.has('CONNECT')) {
+          await interaction.reply('I need permission to join the voice chat.');
+          return;
         }
-        else {
-          const permissions = voiceChannel.permissionsFor(interaction.client.user);
-
-          if (!permissions.has('CONNECT')) {
-            await interaction.reply('I need permission to join the voice chat.');
-            return;
-          }
-          else if (!permissions.has('SPEAK')) {
-            await interaction.reply('I need permission to speak in the voice chat');
-            return;
-          }
+        else if (!permissions.has('SPEAK')) {
+          await interaction.reply('I need permission to speak in the voice chat');
+          return;
         }
 
-        connection = joinVoiceChannel({
-          channelId: voiceChannel.id,
-          guildId: voiceChannel.guildId,
-          adapterCreator: voiceChannel.guild.voiceAdapterCreator
-        });
-        connection.subscribe(player);
-        player.play(resource);
+        connection = UtilAudioPlayer.join(voiceChannel);
 
-        player.on(Discord.AudioPlayerStatus.Idle, () => {
-          connection.destroy();
-        }); 
+        player = Discord.createAudioPlayer();
 
-        player.on('error', error => {
-          console.log(error);
-          interaction.reply('Error with YouTube audio.');
-        });
+        UtilAudioPlayer.play(player, connection, playStream);
 
         await interaction.reply('Started playing YouTube URL: ' + url);
       }
@@ -83,7 +61,7 @@ module.exports = {
     }
     
     if (interaction.options.getSubcommand() === 'stop') {
-      connection.destroy();
+      UtilAudioPlayer.stop(connection);
       await interaction.reply('Audio has been stopped.');
     }
   }

@@ -1,9 +1,0 @@
-{
-    "client_id": "faa9de594e4f407791b8e1cd02af979e",
-    "client_secret": "a1f41d65f5054b4f977b374b21bc8ecb",
-    "redirect_url": "http://127.0.0.1/index.html",
-    "expires_in": null,
-    "expiry": null,
-    "market": "ca",
-    "file": true
-}

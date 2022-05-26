@@ -37,4 +37,4 @@ client.on('interactionCreate', async interaction => {
   }
 })
 
-client.login(process.env.DEV_TOKEN);
+client.login(process.env.PROD_TOKEN);

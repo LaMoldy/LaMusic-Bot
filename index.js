@@ -1,4 +1,4 @@
-const { Client, Intents, Collection, Interaction } = require('discord.js');
+const { Client, Intents, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 require('dotenv').config(); 
@@ -37,4 +37,4 @@ client.on('interactionCreate', async interaction => {
   }
 })
 
-client.login(process.env.TOKEN);
+client.login(process.env.DEV_TOKEN);

@@ -57,11 +57,15 @@ module.exports = {
 
         connection = UtilAudioPlayer.join(voiceChannel);
 
-        player = Discord.createAudioPlayer();
+        player = Discord.createAudioPlayer({
+          behaviors: {
+            noSubscriber: Discord.NoSubscriberBehavior.Play
+          }
+        });
 
         UtilAudioPlayer.play(player, connection, stream); 
 
-        await interaction.reply('Started playing ' + sp_result[0].title);
+        await interaction.reply('Started playing: ' + sp_result[0].title);
       }
       else {
         await interaction.reply('Please pass a spotify url to start playing audio from Spotify.')

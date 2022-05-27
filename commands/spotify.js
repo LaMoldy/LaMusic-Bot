@@ -34,6 +34,9 @@ module.exports = {
       if (song) {
         const voiceChannel = interaction.member.voice.channel;
 
+        // Checks if the user is in a voice channel
+        if (!voiceChannel) return await interaction.reply('Please connect to a voice channel before using this command.');
+
         if (play.is_expired()) {
           await play.refreshToken();
         }

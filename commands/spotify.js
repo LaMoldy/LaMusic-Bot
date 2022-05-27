@@ -19,7 +19,7 @@ module.exports = {
         .addStringOption(option =>
           option
             .setName('song')
-            .setDescription('Name of the song from Spotify')
+            .setDescription('NAME or URL of the song from Spotify')
         )
     )
     .addSubcommand(subcommand =>
@@ -32,23 +32,43 @@ module.exports = {
       const song = interaction.options.getString('song');
 
       if (song) {
+        // Checks to see if the user has the Musical Gentlemen role
+        if (process.env.ENVIRONMENT === 'prod') {
+          if (!interaction.member.roles.cache.has('595478746283376640')) {
+            await interaction.reply('You are not able to use this command.  Please contact someone that has the Musical Gentlemen role to use this command.');
+            return;
+          }
+        }
+        else {
+          if (!interaction.member.roles.cache.has('979858079401246721')) {
+            await interaction.reply('You are not able to use this command.  Please contact someone that has the Musical Gentlemen role to use this command.');
+            return;
+          }
+        } 
+
+        // Gets the voice channel of the user
         const voiceChannel = interaction.member.voice.channel;
 
         // Checks if the user is in a voice channel
         if (!voiceChannel) return await interaction.reply('Please connect to a voice channel before using this command.');
 
+        // Checks if the player expired and restarts it
         if (play.is_expired()) {
           await play.refreshToken();
         }
 
+        // Searches the song on spotify
         let sp_result = await play.search(song, {
           limit: 1
         });
 
+        // Gets the Youtube url of that song
         let stream = await play.stream(sp_result[0].url);
 
+        // Gets the permissions
         const permissions = voiceChannel.permissionsFor(interaction.client.user);
 
+        // Checks to make sure the permissons allow the bot the function correctly
         if (!permissions.has('CONNECT')) {
           await interaction.reply('I need permission to join the voice chat.');
           return;
@@ -58,20 +78,24 @@ module.exports = {
           return;
         }
 
+        // Joins the voice channel
         connection = UtilAudioPlayer.join(voiceChannel);
 
+        // Creates the audio player
         player = Discord.createAudioPlayer({
           behaviors: {
             noSubscriber: Discord.NoSubscriberBehavior.Play
           }
         });
 
+        // Plays the audio
         UtilAudioPlayer.play(player, connection, stream); 
 
-        await interaction.reply('Started playing: ' + sp_result[0].title);
+        // Replies to the user
+        await interaction.reply('Started playing: ' + sp_result[0].title + ' by ' + sp_result[0].channel);
       }
       else {
-        await interaction.reply('Please pass a spotify url to start playing audio from Spotify.')
+        await interaction.reply('Please pass a spotify url or song name to start playing audio from Spotify.')
       }
     }
     if (interaction.options.getSubcommand() === 'stop') {

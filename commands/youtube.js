@@ -20,7 +20,7 @@ module.exports = {
         .addStringOption(option =>
           option
             .setName('song')
-            .setDescription('Song name for specified video audio')
+            .setDescription('Song NAME or URL for specified video audio')
         )
     )
     .addSubcommand(subcommand => 
@@ -29,9 +29,23 @@ module.exports = {
         .setDescription('Stops the YouTube audio from playing')
     ),
   async execute(interaction) {
-    const { stream, search } = require('play-dl');
+    const { stream, search } = require('play-dl'); // Imports play-dl stuff.
 
     if (interaction.options.getSubcommand() === 'play') {
+      // Checks to see if the user has the Musical Gentlemen role
+      if (process.env.ENVIRONMENT === 'prod') {
+        if (!interaction.member.roles.cache.has('595478746283376640')) {
+          await interaction.reply('You are not able to use this command.  Please contact someone that has the Musical Gentlemen role to use this command.');
+          return;
+        }
+      }
+      else {
+        if (!interaction.member.roles.cache.has('979858079401246721')) {
+          await interaction.reply('You are not able to use this command.  Please contact someone that has the Musical Gentlemen role to use this command.');
+          return;
+        }
+      }
+
       const song = interaction.options.getString('song');
       if (song) {
         const voiceChannel = interaction.member.voice.channel; // gets the voice channel of the user

@@ -57,7 +57,7 @@ module.exports = {
 
         UtilAudioPlayer.play(player, connection, playStream);
 
-        await interaction.reply('Started playing YouTube URL: ' + song);
+        await interaction.reply('Started playing YouTube song: ' + yt_info[0].title);
       }
 
       else {

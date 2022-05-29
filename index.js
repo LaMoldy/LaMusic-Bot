@@ -2,6 +2,7 @@
 const { Client, Intents, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
+const loadCommands = require('./deploy-commands');
 require('dotenv').config(); 
 
 // Adds discord permissions for bot
@@ -45,6 +46,9 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
+
+// Loads the updated commands on run
+loadCommands();
 
 // Assigns the token
 if (process.env.ENVIRONMENT === 'prod') {

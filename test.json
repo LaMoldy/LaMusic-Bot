@@ -1,0 +1,172 @@
+Collection(2) [Map
+] {
+  '173826871270703105' => GuildMember {
+    guild: Guild {
+      id: '978768507254738954',
+      name: 'Bot testing',
+      icon: null,
+      features: [],
+      commands: [GuildApplicationCommandManager
+      ],
+      members: [GuildMemberManager
+      ],
+      channels: [GuildChannelManager
+      ],
+      bans: [GuildBanManager
+      ],
+      roles: [RoleManager
+      ],
+      presences: PresenceManager {},
+      voiceStates: [VoiceStateManager
+      ],
+      stageInstances: [StageInstanceManager
+      ],
+      invites: [GuildInviteManager
+      ],
+      scheduledEvents: [GuildScheduledEventManager
+      ],
+      available: true,
+      shardId: 0,
+      splash: null,
+      banner: null,
+      description: null,
+      verificationLevel: 'NONE',
+      vanityURLCode: null,
+      nsfwLevel: 'DEFAULT',
+      premiumSubscriptionCount: 0,
+      discoverySplash: null,
+      memberCount: 2,
+      large: false,
+      premiumProgressBarEnabled: false,
+      applicationId: null,
+      afkTimeout: 300,
+      afkChannelId: null,
+      systemChannelId: '978768507254738957',
+      premiumTier: 'NONE',
+      explicitContentFilter: 'DISABLED',
+      mfaLevel: 'NONE',
+      joinedTimestamp: 1653534945992,
+      defaultMessageNotifications: 'ALL_MESSAGES',
+      systemChannelFlags: [SystemChannelFlags
+      ],
+      maximumMembers: 500000,
+      maximumPresences: null,
+      approximateMemberCount: null,
+      approximatePresenceCount: null,
+      vanityURLUses: null,
+      rulesChannelId: null,
+      publicUpdatesChannelId: null,
+      preferredLocale: 'en-US',
+      ownerId: '173826871270703105',
+      emojis: [GuildEmojiManager
+      ],
+      stickers: [GuildStickerManager
+      ]
+    },
+    joinedTimestamp: 1653426996784,
+    premiumSinceTimestamp: null,
+    nickname: null,
+    pending: false,
+    communicationDisabledUntilTimestamp: null,
+    _roles: [ '979858079401246721'
+    ],
+    user: User {
+      id: '173826871270703105',
+      bot: false,
+      system: false,
+      flags: [UserFlags
+      ],
+      username: 'LaMoldy',
+      discriminator: '3097',
+      avatar: '9dfd2eb2f05ec6cad1789b1c2bb80aaa',
+      banner: undefined,
+      accentColor: undefined
+    },
+    avatar: null
+  },
+  '979221003345494036' => GuildMember {
+    guild: Guild {
+      id: '978768507254738954',
+      name: 'Bot testing',
+      icon: null,
+      features: [],
+      commands: [GuildApplicationCommandManager
+      ],
+      members: [GuildMemberManager
+      ],
+      channels: [GuildChannelManager
+      ],
+      bans: [GuildBanManager
+      ],
+      roles: [RoleManager
+      ],
+      presences: PresenceManager {},
+      voiceStates: [VoiceStateManager
+      ],
+      stageInstances: [StageInstanceManager
+      ],
+      invites: [GuildInviteManager
+      ],
+      scheduledEvents: [GuildScheduledEventManager
+      ],
+      available: true,
+      shardId: 0,
+      splash: null,
+      banner: null,
+      description: null,
+      verificationLevel: 'NONE',
+      vanityURLCode: null,
+      nsfwLevel: 'DEFAULT',
+      premiumSubscriptionCount: 0,
+      discoverySplash: null,
+      memberCount: 2,
+      large: false,
+      premiumProgressBarEnabled: false,
+      applicationId: null,
+      afkTimeout: 300,
+      afkChannelId: null,
+      systemChannelId: '978768507254738957',
+      premiumTier: 'NONE',
+      explicitContentFilter: 'DISABLED',
+      mfaLevel: 'NONE',
+      joinedTimestamp: 1653534945992,
+      defaultMessageNotifications: 'ALL_MESSAGES',
+      systemChannelFlags: [SystemChannelFlags
+      ],
+      maximumMembers: 500000,
+      maximumPresences: null,
+      approximateMemberCount: null,
+      approximatePresenceCount: null,
+      vanityURLUses: null,
+      rulesChannelId: null,
+      publicUpdatesChannelId: null,
+      preferredLocale: 'en-US',
+      ownerId: '173826871270703105',
+      emojis: [GuildEmojiManager
+      ],
+      stickers: [GuildStickerManager
+      ]
+    },
+    joinedTimestamp: 1653534945992,
+    premiumSinceTimestamp: null,
+    nickname: null,
+    pending: false,
+    communicationDisabledUntilTimestamp: null,
+    _roles: [ '979221278663778318'
+    ],
+    user: ClientUser {
+      id: '979221003345494036',
+      bot: true,
+      system: false,
+      flags: null,
+      username: 'Audio Assistant testing',
+      discriminator: '9132',
+      avatar: null,
+      banner: undefined,
+      accentColor: undefined,
+      verified: true,
+      mfaEnabled: false
+    },
+    avatar: null
+  }
+}

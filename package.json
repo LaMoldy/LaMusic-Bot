@@ -3,11 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "type": "module",
+  "imports": {
+    "#events/*": "./events/*",
+    "#commands/*": "./events/commands/*.js"
+  },
   "dependencies": {
     "@discordjs/builders": "^0.13.0",
     "@discordjs/rest": "^0.4.1",
     "@discordjs/voice": "^0.9.0",
     "@types/node": "^17.0.35",
+    "chalk": "^5.0.1",
+    "collect.js": "^4.33.0",
     "discord-api-types": "^0.33.0",
     "discord.js": "^13.7.0",
     "dotenv": "^16.0.1",
@@ -19,8 +26,6 @@
     "play-dl": "^1.9.4"
   },
   "scripts": {
-    "start": "node index.js",
-    "commands": "node deploy-commands.js",
-    "debug": "node deploy-commands.js & node index.js"
+    "start": "node index.js"
   }
 }

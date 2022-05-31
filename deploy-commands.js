@@ -1,44 +1,56 @@
 // Package imports
-const fs = require('node:fs');
-const path = require('node:path');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v10');
+import fs from 'node:fs';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v10';
+import {} from 'dotenv/config';
+import MessageLogger from './utils/messages.js';
 
-// Gets the .env file variables
-require('dotenv').config();
-
-function loadCommands() {
+export default function loadCommands() {
   // Sets the variables for the commands 
   const commands = []; // Array of all loaded commands
-  const commandsPath = path.join(__dirname, 'commands'); // Sets the path of the commands directory
-  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js')); // Gets all files that end with extension .js
+  const commandFiles = fs
+    .readdirSync('./events/commands')
+    .filter(file => file.endsWith('.js')); // Gets all files that end with extension .js
 
-  // Adds the commands to the array in JSON format
-  for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
-    commands.push(command.data.toJSON());
-  }
-  // Creates a new REST api variable
+  // Creates route to Discord
   const rest = new REST({ version: 10 });
 
   // Checks if environment is in production mode
   if (process.env.ENVIRONMENT === 'prod') {
     rest.setToken(process.env.PROD_TOKEN);
-
-    // Adds the commands to the Discord API
-    rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID_PROD, process.env.GUILD_ID_PROD), { body: commands })
-      .then(() => console.log('Successfully registered application commands.'))
-      .catch(console.error);
   }
   else {
     rest.setToken(process.env.DEV_TOKEN);
-
-    // Adds the commands to the Discord API
-    rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID_DEV, process.env.GUILD_ID_DEV), { body: commands })
-      .then(() => console.log('Successfully registered application commands.'))
-      .catch(console.error);
   }
-}
 
-module.exports = loadCommands;
+  // Adds the commands to the array in JSON format
+  (async () => {
+    for (const file of commandFiles) {
+      // Imports the command file
+      const command = await import(
+        `#commands/${file.substring(0, file.length - 3)}`
+      );
+
+      // Pushes the command to the commands list
+      commands.push(await command.create());
+    }
+
+    try {
+      MessageLogger.infoMessage('Started reloading application (/) commands.');
+      
+      // Checks current environment and loads the commands onto the API
+      if (process.env.ENVIRONMENT === 'prod') {
+        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID_PROD), { body: commands });
+      }
+      else {
+        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID_DEV), { body: commands });
+      }
+    }
+    catch (error) {
+      MessageLogger.errorMessage(error.message);
+    }
+    finally {
+      MessageLogger.infoMessage('Successfully reloaded application (/) commands.');
+    }
+  })();
+}

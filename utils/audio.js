@@ -1,7 +1,7 @@
-const Discord = require('@discordjs/voice');
-const { joinVoiceChannel} = require('@discordjs/voice'); 
+import { createAudioResource, AudioPlayerStatus } from '@discordjs/voice';
+import { joinVoiceChannel } from '@discordjs/voice'; 
 
-class UtilAudioPlayer {
+export default class UtilAudioPlayer {
   static join(voiceChannel) {
     return joinVoiceChannel({
       channelId: voiceChannel.id,
@@ -11,12 +11,12 @@ class UtilAudioPlayer {
   }
 
   static play(player, connection, stream) {
-    let resource = Discord.createAudioResource(stream.stream, { inputType: stream.type });
+    let resource = createAudioResource(stream.stream, { inputType: stream.type });
     
     player.play(resource);
     connection.subscribe(player);
 
-    player.on(Discord.AudioPlayerStatus.Idle, () => {
+    player.on(AudioPlayerStatus.Idle, () => {
       connection.destroy();
     });
 
@@ -29,5 +29,3 @@ class UtilAudioPlayer {
     connection.destroy();
   }
 }
-
-module.exports = UtilAudioPlayer;

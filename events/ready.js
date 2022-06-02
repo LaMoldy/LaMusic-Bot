@@ -3,7 +3,7 @@ import MessageLogger from "../utils/messages.js";
 const once = true;
 const name = 'ready';
 
-async function invoke(client) {
+async function invoke() {
   MessageLogger.infoMessage('MoldyBot has started and is now awaiting commands.');
 }
 

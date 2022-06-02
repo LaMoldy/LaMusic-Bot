@@ -6,7 +6,8 @@
   "type": "module",
   "imports": {
     "#events/*": "./events/*",
-    "#commands/*": "./events/commands/*.js"
+    "#commands/*": "./events/commands/*.js",
+    "#event/*": "./events/event/*.js"
   },
   "dependencies": {
     "@discordjs/builders": "^0.13.0",

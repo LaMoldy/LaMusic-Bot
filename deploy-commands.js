@@ -5,7 +5,7 @@ import { Routes } from 'discord-api-types/v10';
 import {} from 'dotenv/config';
 import MessageLogger from './utils/messages.js';
 
-export default function loadCommands() {
+export const loadCommands = () => {
   // Sets the variables for the commands 
   const commands = []; // Array of all loaded commands
   const commandFiles = fs
@@ -43,7 +43,7 @@ export default function loadCommands() {
         await rest.put(Routes.applicationCommands(process.env.CLIENT_ID_PROD), { body: commands });
       }
       else {
-        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID_DEV), { body: commands });
+        await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID_DEV, '978768507254738954'), { body: commands });
       }
     }
     catch (error) {

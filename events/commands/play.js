@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import UtilAudioPlayer from '../../utils/audio.js';
-import { NoSubscriberBehavior, createAudioPlayer } from '@discordjs/voice';
+import { NoSubscriberBehavior, createAudioPlayer, createAudioResource } from '@discordjs/voice';
 import MessageLogger from '../../utils/messages.js';
 import play from 'play-dl';
 
@@ -43,23 +43,32 @@ const invoke = async (interaction) => {
         await play.refreshToken();
       }
 
-      // Searches for the youtube data with the song name or url
-      let searchData = await play.search(song, {
-        limit: 1
-      });
-
       let resource = null;
+      let searchData = null;
+      let isSoundCloud = false;
 
-      try {
-        const url = searchData[0].url;
-        resource = await play.stream(url);
-      }
-      catch (error) {
-        interaction.reply({
-          content: 'YouTube video is currently unavailable. Please try again in a couple minutes.'
+			if (song.startsWith('https://soundcloud.com/')) {
+        //https://soundcloud.com/karanaujla-music/gangsta-feat-yg
+        isSoundCloud = true;
+				resource = await play.stream(song);
+			}
+			else {
+        // Searches for the youtube data with the song name or url
+        searchData = await play.search(song, {
+          limit: 1
         });
-        MessageLogger.warningMessage(error.message + ' while trying to play song: ' + song);
-        return;
+
+        try {
+          const url = searchData[0].url;
+          resource = await play.stream(url);
+        }
+        catch (error) {
+          interaction.reply({
+            content:  'Video is currently unavailable. Please try again in a couple minutes.'
+          });
+          MessageLogger.warningMessage(error.message + ' while trying to play song: ' + song);
+          return;
+        }
       }
 
       // Gets the permissions for the bot
@@ -88,10 +97,17 @@ const invoke = async (interaction) => {
         }
       }); // Creates the audio player
 
+      console.log(resource);
       UtilAudioPlayer.play(player, connection, resource); // Plays the youtube video audio in the voice chat
 
+      if (isSoundCloud) {
+        interaction.reply({
+          content: 'Started playing song from: ' + song,
+        }); // Replies
+        return;
+      }
       interaction.reply({
-        content: 'Started playing YouTube song: ' + searchData[0].title + ' by ' + searchData[0].channel,
+        content: 'Started playing: ' + searchData[0].title + ' by ' + searchData[0].channel,
         embeds: [{
           image: {
             url: searchData[0].thumbnails[0].url
@@ -99,10 +115,11 @@ const invoke = async (interaction) => {
         }]
       }); // Replies 
     }
-
-    interaction.reply({
-      content: 'Must enter a search argument to play video audio'
-    });
+    else {
+      interaction.reply({
+        content: 'Must enter a search argument to play video audio'
+      });
+    }
   }
   else {
     interaction.reply({

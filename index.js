@@ -1,7 +1,7 @@
 // Package imports
 import { Client, Intents } from 'discord.js';
 import fs from 'node:fs';
-import loadCommands from './deploy-commands.js';
+import { loadCommands } from './deploy-commands.js';
 import {} from 'dotenv/config';
 import MessageLogger from './utils/messages.js';
 

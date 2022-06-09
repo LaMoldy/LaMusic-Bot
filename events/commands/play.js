@@ -23,8 +23,8 @@ const invoke = async (interaction) => {
   const DEBUG_ROLE_ID = '979858079401246721';
   const PRODUCTION_ROLE_ID = '595478746283376640';
 
-  if (!interaction.member.roles.cache.has(DEBUG_ROLE_ID)
-    || !interaction.member.roles.cache.has(PRODUCTION_ROLE_ID)) {
+  if (interaction.member.roles.cache.has(DEBUG_ROLE_ID)
+    || interaction.member.roles.cache.has(PRODUCTION_ROLE_ID)) {
     const song = interaction.options.getString('song');
 
     // Checks if the song is not null
@@ -48,10 +48,18 @@ const invoke = async (interaction) => {
       let isSoundCloud = false;
 
 			if (song.startsWith('https://soundcloud.com/')) {
-        //https://soundcloud.com/karanaujla-music/gangsta-feat-yg
         isSoundCloud = true;
 				resource = await play.stream(song);
 			}
+      else if (song.startsWith('https://') && 
+        !song.startsWith('https://soundcloud.com' &&
+        !song.startsWith('https://youtube.com' &&
+        !song.startsWith('https://open.spotify.com/track/')))) {
+        interaction.reply({
+          content: 'Link invalid. Link must be a SoundCloud, Spotify, or YouTube track link.'
+        });
+        return;
+      }
 			else {
         // Searches for the youtube data with the song name or url
         searchData = await play.search(song, {
@@ -97,7 +105,6 @@ const invoke = async (interaction) => {
         }
       }); // Creates the audio player
 
-      console.log(resource);
       UtilAudioPlayer.play(player, connection, resource); // Plays the youtube video audio in the voice chat
 
       if (isSoundCloud) {

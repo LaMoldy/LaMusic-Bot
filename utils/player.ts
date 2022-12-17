@@ -26,7 +26,7 @@ export function createPlayer(client: Client): Player {
   });
 
   player.on("botDisconnect", (queue: any) => {
-    queue.metadata.send("I have been disconned. I have destroyed the queue!");
+    queue.metadata.send("I have been disconnected. I have destroyed the queue!");
   });
 
   player.on("channelEmpty", (queue: any) => {
